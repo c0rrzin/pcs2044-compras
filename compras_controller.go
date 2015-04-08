@@ -10,6 +10,40 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+// GetOrdersHandler returns all orders
+// REQUEST:
+// {
+//   "order_id": 1
+// }
+// RESPONSE:
+// { "orders": [
+//  {
+//   "status": "pendente",
+//   "produtos": [
+//     {
+//        "produto_id": 1,
+//        "quantidade": 2
+//     },
+//     {
+//        "produto_id": 2,
+//        "quantidade": 1
+//     }
+//
+//    ]
+//   }
+//  ]
+// }
+func GetOrdersHandler(w http.ResponseWriter, r *http.Request) {
+	if r.ParseForm() != nil {
+		http.Error(w, "Invalid parameters", 400)
+		return
+	}
+	os := &OrdensDeCompra{}
+	os.All()
+	body, _ := json.Marshal(os)
+	w.Write(body)
+}
+
 // GetOrderHandler returns a correspondent order from an "order_id"
 // REQUEST:
 // {

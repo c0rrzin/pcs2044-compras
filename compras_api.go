@@ -110,6 +110,12 @@ func (os *OrdensDeCompra) GetByStatus(s StatusOrdemDeCompra) {
 	db.Where("status = ?", s).Find(os)
 }
 
+// All returns all OrdensDeCompra with the given status
+func (os *OrdensDeCompra) All() {
+	db := OpenDB()
+	db.Find(os)
+}
+
 // NewOrdemDeCompra returns a new instance of OrdemDeCompra from an array of Items
 // returns nil if there was a problem
 func NewOrdemDeCompra(items []Item) *OrdemDeCompra {
