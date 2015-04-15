@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -43,7 +42,6 @@ func GetOrdersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	os := &OrdensDeCompra{}
 	os.All()
-	fmt.Println(os)
 	body, _ := json.Marshal(os)
 	w.Write(body)
 }
