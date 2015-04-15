@@ -34,12 +34,16 @@ import (
 //  ]
 // }
 func GetOrdersHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Methods", "GET")
+	w.Header().Add("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
 	if r.ParseForm() != nil {
 		http.Error(w, "Invalid parameters", 400)
 		return
 	}
 	os := &OrdensDeCompra{}
 	os.All()
+	fmt.Println(os)
 	body, _ := json.Marshal(os)
 	w.Write(body)
 }
@@ -68,7 +72,6 @@ func GetOrderHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid parameters", 400)
 		return
 	}
-	fmt.Println(r.URL.Query().Get("order_id"))
 	orderID, err := strconv.Atoi(r.URL.Query().Get("order_id"))
 	if err != nil {
 		http.Error(w, "Invalid order_id", 400)
@@ -133,7 +136,7 @@ func NewOrderHandler(w http.ResponseWriter, r *http.Request) {
 	o.CreatedAt = time.Now()
 	var items []Item
 	for _, p := range products.Produtos {
-		items = append(items, Item{ProdutoID: p.ProdutoID, Quantidade: p.Quantidade, Valor: p.Valor})
+		items = append(items, Item{ProdutoId: p.ProdutoID, Quantidade: p.Quantidade, Valor: p.Valor})
 	}
 
 	o.Items = items
@@ -157,6 +160,9 @@ type alterOrderRequest struct {
 //   "message": "Order finished successfully"
 // }
 func FinishOrderHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, HEAD")
+	w.Header().Add("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
 	if r.ParseForm() != nil {
 		http.Error(w, "Invalid parameters", 400)
 		return
@@ -186,6 +192,9 @@ func FinishOrderHandler(w http.ResponseWriter, r *http.Request) {
 //   "message": "Order approved successfully"
 // }
 func ApproveOrderHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, HEAD")
+	w.Header().Add("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
 	if r.ParseForm() != nil {
 		http.Error(w, "Invalid parameters", 400)
 		return
@@ -215,6 +224,9 @@ func ApproveOrderHandler(w http.ResponseWriter, r *http.Request) {
 //   "message": "Order canceled successfully"
 // }
 func CancelOrderHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, HEAD")
+	w.Header().Add("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept")
 	if r.ParseForm() != nil {
 		http.Error(w, "Invalid parameters", 400)
 		return

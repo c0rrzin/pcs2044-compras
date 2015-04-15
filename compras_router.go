@@ -9,7 +9,7 @@ func DefRoutes() {
 	router.DefRoute("GET", "/orders", GetOrdersHandler)
 	router.DefRoute("GET", "/order", GetOrderHandler)
 	router.DefRoute("POST", "/order", NewOrderHandler)
-	router.DefRoute("PUT", "/order/finish", FinishOrderHandler)
-	router.DefRoute("PUT", "/order/cancel", CancelOrderHandler)
-	router.DefRoute("PUT", "/order/approve", ApproveOrderHandler)
+	router.DefRoute("POST", "/order/finish", FinishOrderHandler)
+	router.DefRoute("POST", "/order/cancel", CancelOrderHandler)
+	router.DefRoute("POST", "/order/approve", ApproveOrderHandler)
 }

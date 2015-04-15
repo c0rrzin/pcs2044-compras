@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -25,9 +26,9 @@ const (
 
 // Item holds reference to the produto
 type Item struct {
-	ID              int     `json:"id" sql:"autoincrement"`
-	ProdutoID       int     `json:"produto_id"`
-	OrdemDeCompraID int     `sql:"index"`
+	Id              int     `json:"id" sql:"autoincrement"`
+	ProdutoId       int     `json:"produto_id"`
+	OrdemDeCompraId int     `sql:"index"`
 	Quantidade      int     `json:"quantidade"`
 	Valor           float64 `json:"valor"`
 }
@@ -51,7 +52,7 @@ func (o *OrdemDeCompra) Approve() error {
 	}
 	o.Status = StatusAprovado
 	db := OpenDB()
-	db.Save(o)
+	db.Debug().Save(o)
 	return nil
 }
 
@@ -61,8 +62,9 @@ func (o *OrdemDeCompra) Cancel() error {
 		return errors.New("This order is already finished.")
 	}
 	o.Status = StatusCancelado
+	fmt.Println(o)
 	db := OpenDB()
-	db.Save(o)
+	db.Debug().Save(o)
 	return nil
 }
 
@@ -79,13 +81,13 @@ func (o *OrdemDeCompra) Finish() error {
 	}
 	o.Status = StatusTerminado
 	db := OpenDB()
-	db.Save(o)
+	db.Debug().Save(o)
 	return nil
 }
 
 // AddItem appends a new items to the exitent items
 func (o *OrdemDeCompra) AddItem(item Item) {
-	item.OrdemDeCompraID = o.Id
+	item.OrdemDeCompraId = o.Id
 	db := OpenDB()
 	db.Create(&item)
 	o.Items = append(o.Items, item)
@@ -113,7 +115,12 @@ func (os *OrdensDeCompra) GetByStatus(s StatusOrdemDeCompra) {
 // All returns all OrdensDeCompra with the given status
 func (os *OrdensDeCompra) All() {
 	db := OpenDB()
-	db.Find(os)
+	db.Debug().Find(os)
+	for i, o := range *os {
+		var items []Item
+		db.Debug().Model(&o).Related(&items, "items")
+		(*os)[i].Items = items
+	}
 }
 
 // NewOrdemDeCompra returns a new instance of OrdemDeCompra from an array of Items
