@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"errors"
+	"errors"
 	"fmt"
 	"time"
 
@@ -33,7 +33,7 @@ type Item struct {
 	Valor           float64 `json:"valor"`
 }
 
-// OrdemDeCompra stores relevant data from a single order.
+// OrdemDeCompra stores relevant data from a singl e order.
 type OrdemDeCompra struct {
 	Id         int                 `json:"ordem_id" sql:"autoincrement"`
 	Status     StatusOrdemDeCompra `json:"status"`
@@ -47,9 +47,9 @@ type OrdensDeCompra []OrdemDeCompra
 
 // Approve approves a pending order
 func (o *OrdemDeCompra) Approve() error {
-	// if o.Status != StatusPendente {
-	// 	return errors.New("This order cannot be approved.")
-	// }
+	if o.Status != StatusPendente {
+		return errors.New("This order cannot be approved.")
+	}
 	o.Status = StatusAprovado
 	db := OpenDB()
 	db.Debug().Save(o)
@@ -58,9 +58,9 @@ func (o *OrdemDeCompra) Approve() error {
 
 // Cancel only cancels a not finished order
 func (o *OrdemDeCompra) Cancel() error {
-	// if o.Status == StatusTerminado {
-	// 	return errors.New("This order is already finished.")
-	// }
+	if o.Status == StatusTerminado {
+		return errors.New("This order is already finished.")
+	}
 	o.Status = StatusCancelado
 	fmt.Println(o)
 	db := OpenDB()
@@ -76,9 +76,9 @@ func (o *OrdemDeCompra) GetByID(id int) {
 
 // Finish finishes an already approved order
 func (o *OrdemDeCompra) Finish() error {
-	// if o.Status != StatusAprovado {
-	// 	return errors.New("This order must be approved before finishing.")
-	// }
+	if o.Status != StatusAprovado {
+		return errors.New("This order must be approved before finishing.")
+	}
 	o.Status = StatusTerminado
 	db := OpenDB()
 	db.Debug().Save(o)
